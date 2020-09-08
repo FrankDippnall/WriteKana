@@ -1,0 +1,978 @@
+{
+    "normal": [
+        {
+            "romaji": "a",
+            "hiragana": {
+                "char": "あ",
+                "code": 12354,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ア",
+                "code": 12450,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "i",
+            "hiragana": {
+                "char": "い",
+                "code": 12356,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "イ",
+                "code": 12452,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "u",
+            "hiragana": {
+                "char": "う",
+                "code": 12358,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ウ",
+                "code": 12454,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "e",
+            "hiragana": {
+                "char": "え",
+                "code": 12360,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "エ",
+                "code": 12456,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "o",
+            "hiragana": {
+                "char": "お",
+                "code": 12362,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "オ",
+                "code": 12458,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "ka",
+            "hiragana": {
+                "char": "か",
+                "code": 12363,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "カ",
+                "code": 12459,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ki",
+            "hiragana": {
+                "char": "き",
+                "code": 12365,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "キ",
+                "code": 12461,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "ku",
+            "hiragana": {
+                "char": "く",
+                "code": 12367,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ク",
+                "code": 12463,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ke",
+            "hiragana": {
+                "char": "け",
+                "code": 12369,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ケ",
+                "code": 12465,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "ko",
+            "hiragana": {
+                "char": "こ",
+                "code": 12371,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "コ",
+                "code": 12467,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "sa",
+            "hiragana": {
+                "char": "さ",
+                "code": 12373,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "サ",
+                "code": 12469,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "shi",
+            "hiragana": {
+                "char": "し",
+                "code": 12375,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "シ",
+                "code": 12471,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "su",
+            "hiragana": {
+                "char": "す",
+                "code": 12377,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ス",
+                "code": 12473,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "se",
+            "hiragana": {
+                "char": "せ",
+                "code": 12379,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "セ",
+                "code": 12475,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "so",
+            "hiragana": {
+                "char": "そ",
+                "code": 12381,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ソ",
+                "code": 12477,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ta",
+            "hiragana": {
+                "char": "た",
+                "code": 12383,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "タ",
+                "code": 12479,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "chi",
+            "hiragana": {
+                "char": "ち",
+                "code": 12385,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "チ",
+                "code": 12481,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "tsu",
+            "hiragana": {
+                "char": "つ",
+                "code": 12388,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ツ",
+                "code": 12484,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "te",
+            "hiragana": {
+                "char": "て",
+                "code": 12390,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "テ",
+                "code": 12486,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "to",
+            "hiragana": {
+                "char": "と",
+                "code": 12392,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ト",
+                "code": 12488,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "na",
+            "hiragana": {
+                "char": "な",
+                "code": 12394,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "ナ",
+                "code": 12490,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ni",
+            "hiragana": {
+                "char": "に",
+                "code": 12395,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ニ",
+                "code": 12491,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "nu",
+            "hiragana": {
+                "char": "ぬ",
+                "code": 12396,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ヌ",
+                "code": 12492,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ne",
+            "hiragana": {
+                "char": "ね",
+                "code": 12397,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ネ",
+                "code": 12493,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "no",
+            "hiragana": {
+                "char": "の",
+                "code": 12398,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ノ",
+                "code": 12494,
+                "strokes": 1
+            }
+        },
+        {
+            "romaji": "ha",
+            "hiragana": {
+                "char": "は",
+                "code": 12399,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ハ",
+                "code": 12495,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "hi",
+            "hiragana": {
+                "char": "ひ",
+                "code": 12402,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ヒ",
+                "code": 12498,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "fu",
+            "hiragana": {
+                "char": "ふ",
+                "code": 12405,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "フ",
+                "code": 12501,
+                "strokes": 1
+            }
+        },
+        {
+            "romaji": "he",
+            "hiragana": {
+                "char": "へ",
+                "code": 12408,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ヘ",
+                "code": 12504,
+                "strokes": 1
+            }
+        },
+        {
+            "romaji": "ho",
+            "hiragana": {
+                "char": "ほ",
+                "code": 12411,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "ホ",
+                "code": 12507,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "ma",
+            "hiragana": {
+                "char": "ま",
+                "code": 12414,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "マ",
+                "code": 12510,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "mi",
+            "hiragana": {
+                "char": "み",
+                "code": 12415,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ミ",
+                "code": 12511,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "mu",
+            "hiragana": {
+                "char": "む",
+                "code": 12416,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ム",
+                "code": 12512,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "me",
+            "hiragana": {
+                "char": "め",
+                "code": 12417,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "メ",
+                "code": 12513,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "mo",
+            "hiragana": {
+                "char": "も",
+                "code": 12418,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "モ",
+                "code": 12514,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "ra",
+            "hiragana": {
+                "char": "ら",
+                "code": 12425,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ラ",
+                "code": 12521,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ri",
+            "hiragana": {
+                "char": "り",
+                "code": 12426,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "リ",
+                "code": 12522,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ru",
+            "hiragana": {
+                "char": "る",
+                "code": 12427,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ル",
+                "code": 12523,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "re",
+            "hiragana": {
+                "char": "れ",
+                "code": 12428,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "レ",
+                "code": 12524,
+                "strokes": 1
+            }
+        },
+        {
+            "romaji": "ro",
+            "hiragana": {
+                "char": "ろ",
+                "code": 12429,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ロ",
+                "code": 12525,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "ya",
+            "hiragana": {
+                "char": "や",
+                "code": 12420,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ヤ",
+                "code": 12516,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "yu",
+            "hiragana": {
+                "char": "ゆ",
+                "code": 12422,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ユ",
+                "code": 12518,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "yo",
+            "hiragana": {
+                "char": "よ",
+                "code": 12424,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ヨ",
+                "code": 12520,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "wa",
+            "hiragana": {
+                "char": "わ",
+                "code": 12431,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ワ",
+                "code": 12527,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "wo(o)",
+            "hiragana": {
+                "char": "を",
+                "code": 12434,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ヲ",
+                "code": 12530,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "n",
+            "hiragana": {
+                "char": "ん",
+                "code": 12435,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ン",
+                "code": 12531,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "ga",
+            "hiragana": {
+                "char": "が",
+                "code": 12364,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "ガ",
+                "code": 12460,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "gi",
+            "hiragana": {
+                "char": "ぎ",
+                "code": 12366,
+                "strokes": 6
+            },
+            "katakana": {
+                "char": "ギ",
+                "code": 12462,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "gu",
+            "hiragana": {
+                "char": "ぐ",
+                "code": 12368,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "グ",
+                "code": 12464,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "ge",
+            "hiragana": {
+                "char": "げ",
+                "code": 12370,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "ゲ",
+                "code": 12466,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "go",
+            "hiragana": {
+                "char": "ご",
+                "code": 12372,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "ゴ",
+                "code": 12468,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "za",
+            "hiragana": {
+                "char": "ざ",
+                "code": 12374,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "ザ",
+                "code": 12470,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "ji",
+            "hiragana": {
+                "char": "じ",
+                "code": 12376,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ジ",
+                "code": 12472,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "zu",
+            "hiragana": {
+                "char": "ず",
+                "code": 12378,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "ズ",
+                "code": 12474,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "ze",
+            "hiragana": {
+                "char": "ぜ",
+                "code": 12380,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "ゼ",
+                "code": 12476,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "zo",
+            "hiragana": {
+                "char": "ぞ",
+                "code": 12382,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ゾ",
+                "code": 12478,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "da",
+            "hiragana": {
+                "char": "だ",
+                "code": 12384,
+                "strokes": 6
+            },
+            "katakana": {
+                "char": "ダ",
+                "code": 12480,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "dji",
+            "hiragana": {
+                "char": "ぢ",
+                "code": 12386,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "ヂ",
+                "code": 12482,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "dzu",
+            "hiragana": {
+                "char": "づ",
+                "code": 12389,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ヅ",
+                "code": 12485,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "de",
+            "hiragana": {
+                "char": "で",
+                "code": 12391,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "デ",
+                "code": 12487,
+                "strokes": 5
+            }
+        },
+        {
+            "romaji": "do",
+            "hiragana": {
+                "char": "ど",
+                "code": 12393,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "ド",
+                "code": 12489,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "ba",
+            "hiragana": {
+                "char": "ば",
+                "code": 12400,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "バ",
+                "code": 12496,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "bi",
+            "hiragana": {
+                "char": "び",
+                "code": 12403,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ビ",
+                "code": 12499,
+                "strokes": 4
+            }
+        },
+        {
+            "romaji": "bu",
+            "hiragana": {
+                "char": "ぶ",
+                "code": 12406,
+                "strokes": 6
+            },
+            "katakana": {
+                "char": "ブ",
+                "code": 12502,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "be",
+            "hiragana": {
+                "char": "べ",
+                "code": 12409,
+                "strokes": 3
+            },
+            "katakana": {
+                "char": "ベ",
+                "code": 12505,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "bo",
+            "hiragana": {
+                "char": "ぼ",
+                "code": 12412,
+                "strokes": 6
+            },
+            "katakana": {
+                "char": "ボ",
+                "code": 12508,
+                "strokes": 6
+            }
+        },
+        {
+            "romaji": "pa",
+            "hiragana": {
+                "char": "ぱ",
+                "code": 12401,
+                "strokes": 4
+            },
+            "katakana": {
+                "char": "パ",
+                "code": 12497,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "pi",
+            "hiragana": {
+                "char": "ぴ",
+                "code": 12404,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ピ",
+                "code": 12500,
+                "strokes": 3
+            }
+        },
+        {
+            "romaji": "pu",
+            "hiragana": {
+                "char": "ぷ",
+                "code": 12407,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "プ",
+                "code": 12503,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "pe",
+            "hiragana": {
+                "char": "ぺ",
+                "code": 12410,
+                "strokes": 2
+            },
+            "katakana": {
+                "char": "ペ",
+                "code": 12506,
+                "strokes": 2
+            }
+        },
+        {
+            "romaji": "po",
+            "hiragana": {
+                "char": "ぽ",
+                "code": 12413,
+                "strokes": 5
+            },
+            "katakana": {
+                "char": "ポ",
+                "code": 12509,
+                "strokes": 5
+            }
+        }
+    ],
+    "special": [
+        {
+            "romaji": "yo (small)",
+            "hiragana": {
+                "char": "ょ",
+                "code": 12423,
+                "strokes": 2
+            },
+            "katakana": {}
+        },
+        {
+            "romaji": "yu (small)",
+            "hiragana": {
+                "char": "ゅ",
+                "code": 12421,
+                "strokes": 2
+            },
+            "katakana": {}
+        },
+        {
+            "romaji": "ya (small)",
+            "hiragana": {
+                "char": "ゃ",
+                "code": 12419,
+                "strokes": 3
+            },
+            "katakana": {}
+        },
+        {
+            "romaji": "chōon",
+            "hiragana": {},
+            "katakana": {
+                "char": "ー",
+                "code": 12540,
+                "strokes": 1
+            }
+        },
+        {
+            "romaji": "tsu (small)",
+            "hiragana": {
+                "char": "っ",
+                "code": 12387,
+                "strokes": 1
+            },
+            "katakana": {
+                "char": "ッ",
+                "code": 12483,
+                "strokes": 3
+            }
+        }
+    ]
+}

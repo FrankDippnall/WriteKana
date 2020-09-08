@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kana Writing Project</title>
+</head>
+
+<body>
+    <h1>Kana Writing Application</h1>
+    The goal of this project is to develop a functional kana writing practice web application, as such a service seems
+    to not exist.
+    <br>
+    <a href="write.html">Click here to go to the prototype.</a>
+
+    <svg class="grid" id="grid2" width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+        <g>
+            <title>background</title>
+            <rect fill="#fff" id="canvas_background" height="402" width="402" y="-1" x="-1" />
+            <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+                <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" />
+            </g>
+        </g>
+        <g>
+            <title>Layer 1</title>
+            <line id="main-h" x1="-2.5" stroke="#000" stroke-dasharray="5,5" stroke-linecap="undefined"
+                stroke-linejoin="undefined" id="svg_3" y2="200" x2="400" y1="200" stroke-opacity="null" stroke-width="2"
+                fill="none" />
+            <line id="main-v" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_6" y2="400" x2="200"
+                y1="-2.5" x1="200" stroke-opacity="null" stroke-dasharray="5,5" stroke-width="2" stroke="#000"
+                fill="none" />
+            <line id="sub-h1" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_8" y2="100" x2="400"
+                y1="100" x1="-2.5" stroke-opacity="null" stroke-dasharray="5,5" stroke="#000" fill="none" />
+            <line id="sub-h2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_10" y2="300" x2="400"
+                y1="300" x1="-2.5" stroke-opacity="null" stroke-dasharray="5,5" stroke="#000" fill="none" />
+            <line id="sub-v1" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_12" y2="400" x2="100"
+                y1="-2.5" x1="100" stroke-opacity="null" stroke-dasharray="5,5" stroke="#000" fill="none" />
+            <line id="sub-v2" stroke-linecap="undefined" stroke-linejoin="undefined" id="svg_14" y2="400" x2="300"
+                y1="-2.5" x1="300" stroke-opacity="null" stroke-dasharray="5,5" stroke="#000" fill="none" />
+        </g>
+    </svg>
+</body>
+
+</html>

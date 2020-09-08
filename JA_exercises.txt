@@ -1,0 +1,91 @@
+
+
+-greetings
+thank you | arigatou | ありがとう
+hello | kon'nichiwa | こんにちは
+nice to meet you | hajimemashite | はじめまして
+good morning | ohayougozaimasu | おはようございます
+good evening | konbanwa | こんばんは
+goodbye | sayounara | さようなら
+he | kare | かれ | 彼
+she | kanojo | かのじょ | 彼女
+I | watashi | わたし | 私
+please (polite suffix) | kudasai | ください | 下さい
+please (standalone) | onegaishimasu | おねがいします | お願いします
+please (polite prefix) | douzo | どうぞ
+they (men) | karera | かれら | 彼ら
+they (women) | kanojotachi | かのじょたち | 彼女達
+we | watashitachi | わたしたち | 私達
+you (plural) | anatatachi | あなたたち | 貴方達
+you (singular) | anata | あなた | 貴方
+
+-nationality
+American person | amerikajin | アメリカじん | アメリカ人
+Australian person | oosutorariajin |　オーストラリアじん　| オーストラリア人
+Belgian person | berugiijin |　ベルギーじん　| ベルギー人
+British person | igirisujin | イギリスじん | イギリス人
+Chinese language | chuugokugo | ちゅうごくご　| 中国語
+Chinese person | chuugokujin | ちゅうごくじん | 中国人
+Dutch person |orandajin|オランダじん|オランダ人
+Dutch language|orandago|オランダご|オランダ語
+English language|eigo|えいご|英語
+French person|furansujin|フランスじん|フランス人
+French language|furansugo|フランスご|フランス語
+German person|doitsujin|ドイツじん|ドイツ人
+German language|doitsugo|どイツご|ドイツ語
+Indian person|indojin|インドじん|インド人
+Italian person|itariajin|イタリアじん|イタリア人
+Italian language|itariago|イタリアご|イタリア語
+Japanese language|nihongo|にほんご|日本語
+Japanese person|nihonjin|にほんじん|日本人
+Korean person|kankokujin|かんこくじん|韓国人
+Korean language|kankokugo|かんこくご|韓国語
+Portuguese person|porutogarujin|ポルトガルじん|ポルトガル人
+Portuguese language|porutogarugo|ポルトガルご|ポルトガル語
+Spanish person|supeinjin|スペインじん|スペイン人
+Spanish language|supeingo|スペインご|スペイン語
+
+-numbers
+0 (zero)|zero/rei|ゼロ|零
+!1 (one)|ichi|一|1
+!2 (two)|ni|ニ|2
+!3 (three)|san|三|3
+!4 (four)|shi/yon|四|5
+!5 (five)|go|互|4
+!6 (six)|roku|六|4
+!7 (seven)|shichi/nana|七|2
+!8 (eight)|hachi|八|2
+!9 (nine)|kyuu/ku|九|2
+!10 (ten)|juu|十|2
+!100 (hundred)|hyaku|百|6
+!1000 (thousand)|sen|千|3
+-family
+child|kodomo|こども|子供
+cousin (female)|itoko|いとこ|従姉妹
+cousin (male)|itoko|いとこ|従兄弟
+family|kazoku|かぞく|家族
+grandchildren|mago|まご|孫
+grandfather|sofu|そふ|祖父
+grandmother|sobo|そぼ|祖母
+head of the family|shujin|しゅじん|主人
+siblings|kyoudai|きょうだい|兄弟
+son|musuko|むすこ|息子
+daughter|musume|むすめ|娘
+uncle|oji|おじ|伯父
+aunt|oba|おば|伯母
+wife|tsuma|つま|妻
+younger brother|otouto|おとうと|弟
+younger sister|imouto|いもうと|妹
+older brother|ani|あに|兄
+older sister|ane|あね|姉
+name|namae|なまえ|名前
+
+-jobs & education
+employee|kaishain|かいしゃいん|会社員
+part-timer|paatotaimaa|パートタイマー
+college student|daigakusei|だいがくせい|大学生
+high school student|koukousei|こうこうせい|高校生
+middle school student|chuugokusei|ちゅうごくせい|中国製
+schoolchild|shougakusei|しょうがくせい|小学生
+
+

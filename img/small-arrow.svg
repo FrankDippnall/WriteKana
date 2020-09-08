@@ -1,0 +1,12 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+ <title>ionicons-v5-c</title>
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="602" width="802" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <path stroke="#000" id="svg_1" fill="black" stroke-miterlimit="10" stroke-width="32px" d="m185.71188,185.22132l0,141.55736c0,8.51297 8.29819,13.92143 15.13199,9.84068l121.00714,-72.42368c5.91612,-3.53893 5.91612,-12.85243 0,-16.39137l-121.00714,-72.42368c-6.8338,-4.08076 -15.13199,1.32771 -15.13199,9.84068z"/>
+ </g>
+</svg>
