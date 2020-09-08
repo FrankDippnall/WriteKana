@@ -32,11 +32,17 @@ var currentExercise = null;
 var currentGrid = 0;
 
 
+
+let showing_answer = 'kana';
+let current_answer_kana = '';
+let current_answer_kanji = '';
+
 $(document).ready(function () {
     let canvas = document.getElementById("draw-canvas");
 
     let strokes;
     let startTime, timer_enabled;
+
     function startTimer() {
         startTime = new Date().getTime();
         timer_enabled = true;
@@ -205,8 +211,14 @@ $(document).ready(function () {
     })
 
     $("#finish_answer").click(function () {
-        if ($(this).html() === currentExercise.kana && currentExercise.kanji) $(this).html("<span class='kanji'>" + currentExercise.kanji + "</span>")
-        else $(this).html(constructResultKanaHTML(currentExercise.kana));
+        if (showing_answer == 'kana' && currentExercise.kanji) {
+            $(this).html(current_answer_kanji)
+            showing_answer = 'kanji'
+        }
+        else {
+            $(this).html(current_answer_kana);
+            showing_answer = 'kana'
+        }
     });
 
     var options_out = true;
@@ -388,21 +400,69 @@ $(document).ready(function () {
         }
     }
 
-    function constructResultKanaHTML(kana_series) {
+    function constructResultKanaHTML() {
+        function getFullText(array) {
+            let str = "";
+            for (let o of array) {
+                str += o.char;
+            }
+            return str;
+        }
         //constructs an html sequence of <span class="answer_kana [correct/incorrect]">
-        let html = "";
 
-        for (let k in kana_series) {
-            let kana = kana_series[k];
-            html += kana;
+        let correct_series = [];
+        if (currentExercise.strokes) {
+            correct_series = [[{ char: currentExercise.kana, strokes: currentExercise.strokes }]];
+        }
+        else {
+            if (use_compound_kana && currentExercise.compounds) {
+                for (let c of currentExercise.compounds) {
+                    if (c.length == 2) {
+                        correct_series.push([findKanaObject(c[0]), findKanaObject(c[1])]);
+                    }
+
+                    else {
+                        correct_series.push([findKanaObject(c[0])]);
+                    }
+
+                }
+            }
+            else {
+                for (let k in currentExercise.kana) {
+                    correct_series.push([findKanaObject(currentExercise.kana[k])]);
+                }
+            }
+
         }
 
+        console.log(correct_series)
+
+
+
+        let html = "";
+        for (let k in correct_series) {
+            let kana = log[k];
+            let kana_correct = correct_series[k];
+            console.log(kana, kana_correct)
+            if (kana) {
+                html += `<span class="answer_kana ${isCorrect(kana, kana_correct) ? 'correct' : 'incorrect'}">${getFullText(kana_correct)}</span>`;
+            }
+            else {
+                html += `<span class="answer_kana missing">${getFullText(kana_correct)}</span>`;
+            }
+
+        }
         return html;
+
     }
 
     function accept() {
+
+        //load answer html
+        loadAnswer();
         $finish_log.html($log.html());
-        document.getElementById("finish_answer").innerHTML = constructResultKanaHTML(currentExercise.kana);
+        showing_answer = 'kana';
+        document.getElementById("finish_answer").innerHTML = current_answer_kana;
         document.getElementById("finish_answer_romaji").innerHTML = currentExercise.romaji;
 
         $finish.css("left", (($("body").width() - $finish.width()) / 2) + "px")
@@ -456,7 +516,7 @@ $(document).ready(function () {
     }
 
     function getKanaPractice(p) {
-        let k = all_kana[p];
+        let k = all_kana.normal[p];
         let a = Math.floor(Math.random() * 2) + 1;
         let letters = a == 1 ? 'hiragana' : 'katakana'
         return { type: 'kana', english: k.romaji, sub: letters, kana: k[letters].char, kanji: null, romaji: k.romaji };
@@ -505,6 +565,11 @@ $(document).ready(function () {
         strokes = 0;
     }
 
+    function loadAnswer() {
+        current_answer_kanji = "<span class='kanji'>" + currentExercise.kanji + "</span>";
+        current_answer_kana = constructResultKanaHTML();
+    }
+
     function loadExercise() {
         let exercise = randomExercise();
         if (exercise.type == "word") {
@@ -530,7 +595,6 @@ $(document).ready(function () {
         clearLog();
 
         startTimer();
-
     }
 
     showOptions(false);
@@ -673,6 +737,20 @@ function parseExercises(callback) {
 
 
 
+function isCorrect(drawing, goal) {
+    console.log("checking", drawing, goal)
+
+
+    let strokes = 0;
+    for (let char of goal) {
+        strokes += char.strokes;
+    }
+
+    if (drawing.strokes == strokes) return true;
+    else return false;
+
+}
+
 
 
 
@@ -702,7 +780,7 @@ function parseTime(t) {
 function parseTimeLong(t) {
     if (t < (1000 * 10)) {
         let s = Math.floor(t / 1000);
-        let cs = Math.floor((t % 1000) / 10);
+        let cs = String(Math.floor((t % 1000) / 10)).padStart(2, '0');
         return s + "." + cs + " s";
     }
     else if (t < (1000 * 60)) {
@@ -719,7 +797,6 @@ function parseTimeLong(t) {
         let m = Math.floor(t / (1000 * 60));
         return m + "m";
     }
-
 
 
 }

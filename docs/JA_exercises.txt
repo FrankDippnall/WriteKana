@@ -32,7 +32,7 @@ English language|eigo|えいご|英語
 French person|furansujin|フランスじん|フランス人
 French language|furansugo|フランスご|フランス語
 German person|doitsujin|ドイツじん|ドイツ人
-German language|doitsugo|どイツご|ドイツ語
+German language|doitsugo|ドイツご|ドイツ語
 Indian person|indojin|インドじん|インド人
 Italian person|itariajin|イタリアじん|イタリア人
 Italian language|itariago|イタリアご|イタリア語

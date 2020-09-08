@@ -317,13 +317,7 @@ right:0px;
 #finish_log{
     height:100px;
 }
-#finish_answer{
-    height:100px;
-    -webkit-user-select: none; /* Safari */        
--moz-user-select: none; /* Firefox */
--ms-user-select: none; /* IE10+/Edge */
-user-select: none; /* Standard */
-}
+
 
 #finish_dialog div#buttondiv{
     margin:0 auto 0 auto;
@@ -374,12 +368,16 @@ button#accept:hover {
     background-color: #22ad22;
     border-color: #097009;
 }
-
 #finish_answer{
-    margin-top:20px;
+    height:100px;
+    -webkit-user-select: none; /* Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+/Edge */
+user-select: none; /* Standard */
+margin-top:20px;
     font-family: "UD Digi Kyokasho N-R","BIZ UDGothic","calibri", "sans serif";
     font-size:70px;
-    color:#140a85;
+    color:#000000;
 }
 
 #finish_answer_romaji{
@@ -414,4 +412,22 @@ left:20px;
 }
 #stats .incorrect{
     color:red;
+}
+
+
+
+span.answer_kana {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin:0 2px 0 2px;
+}
+span.answer_kana.correct{
+    background-color:#9bff9b;
+}
+
+span.answer_kana.incorrect{
+    background-color:#ffac9d;
+}
+span.answer_kana.missing{
+    background-color:#dbdbdb;
 }
