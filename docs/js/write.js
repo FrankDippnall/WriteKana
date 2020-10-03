@@ -10,7 +10,7 @@ const weightings = { //used for corrective selection.
     very_high: 20,
 }
 
-const min_sample_distance = 50; //minimum distance for sample to be taken in canvas pixels.
+const min_sample_distance = 40; //minimum distance for sample to be taken in canvas pixels.
 const max_join_distance = 10; //maximum distance from an endpoint for a cross to be a JOIN.
 const min_join_spacing = 30; // minimum space between joins.
 const max_join_area = 15; // maximum difference between bounds allowed for joins.
@@ -134,7 +134,6 @@ function getCross(q1, q2, p1, p2) {
 }
 
 function dist(p, q) {
-    console.log(p, q, "dist", Math.sqrt(Math.pow(q.x - p.x, 2) + Math.pow(q.y - p.y, 2)));
     if (q == false) return 99;
     return Math.sqrt(Math.pow(q.x - p.x, 2) + Math.pow(q.y - p.y, 2));
 }
@@ -202,59 +201,58 @@ function findCrosses(strokes) {
                     if (!cross) break sample_pair;
 
                     //check for JOIN.
-                    if (s2 !== s) {
-                        let joined = false;
-                        if (p == 1) {
-                            //JOIN to p1
-                            if (dist(p1, cross) < max_join_distance) {
-                                if (cross.x < qmaxx + max_join_area &&
-                                    cross.y < qmaxy + max_join_area &&
-                                    cross.x > qminx - max_join_area &&
-                                    cross.y > qminy - max_join_area) {
-                                    addJoin(cross);
-                                    joined = true;
-                                }
+                    let joined = false;
+                    if (p == 1) {
+                        //JOIN to p1
+                        if (dist(p1, cross) < max_join_distance) {
+                            if (cross.x < qmaxx + max_join_area &&
+                                cross.y < qmaxy + max_join_area &&
+                                cross.x > qminx - max_join_area &&
+                                cross.y > qminy - max_join_area) {
+                                addJoin(cross);
+                                joined = true;
                             }
                         }
-                        else if (p == stroke.samples.length - 1) {
-                            //JOIN to p2
-                            if (dist(p2, cross) < max_join_distance) {
-                                if (cross.x < qmaxx + max_join_area &&
-                                    cross.y < qmaxy + max_join_area &&
-                                    cross.x > qminx - max_join_area &&
-                                    cross.y > qminy - max_join_area) {
-                                    addJoin(cross);
-                                    joined = true;
-                                }
-                            }
-                        }
-
-                        if (q == 1) {
-                            //JOIN to q1
-                            if (dist(q1, cross) < max_join_distance) {
-                                if (cross.x < pmaxx + max_join_area &&
-                                    cross.y < pmaxy + max_join_area &&
-                                    cross.x > pminx - max_join_area &&
-                                    cross.y > pminy - max_join_area) {
-                                    addJoin(cross);
-                                    joined = true;
-                                }
-                            }
-                        }
-                        else if (q == stroke2.samples.length - 1) {
-                            //JOIN to q2
-                            if (dist(q2, cross) < max_join_distance) {
-                                if (cross.x < pmaxx + max_join_area &&
-                                    cross.y < pmaxy + max_join_area &&
-                                    cross.x > pminx - max_join_area &&
-                                    cross.y > pminy - max_join_area) {
-                                    addJoin(cross);
-                                    joined = true;
-                                }
-                            }
-                        }
-                        if (joined) break sample_pair;
                     }
+                    else if (p == stroke.samples.length - 1) {
+                        //JOIN to p2
+                        if (dist(p2, cross) < max_join_distance) {
+                            if (cross.x < qmaxx + max_join_area &&
+                                cross.y < qmaxy + max_join_area &&
+                                cross.x > qminx - max_join_area &&
+                                cross.y > qminy - max_join_area) {
+                                addJoin(cross);
+                                joined = true;
+                            }
+                        }
+                    }
+
+                    if (q == 1) {
+                        //JOIN to q1
+                        if (dist(q1, cross) < max_join_distance) {
+                            if (cross.x < pmaxx + max_join_area &&
+                                cross.y < pmaxy + max_join_area &&
+                                cross.x > pminx - max_join_area &&
+                                cross.y > pminy - max_join_area) {
+                                addJoin(cross);
+                                joined = true;
+                            }
+                        }
+                    }
+                    else if (q == stroke2.samples.length - 1) {
+                        //JOIN to q2
+                        if (dist(q2, cross) < max_join_distance) {
+                            if (cross.x < pmaxx + max_join_area &&
+                                cross.y < pmaxy + max_join_area &&
+                                cross.x > pminx - max_join_area &&
+                                cross.y > pminy - max_join_area) {
+                                addJoin(cross);
+                                joined = true;
+                            }
+                        }
+                    }
+                    if (joined) break sample_pair;
+
 
 
 
