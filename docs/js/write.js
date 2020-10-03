@@ -2,6 +2,31 @@ var box_size;
 var pen_sizes = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0];
 var pen_size;
 
+
+const weightings = { //used for corrective selection.
+    low: 1,
+    normal: 3,
+    high: 10,
+    very_high: 20,
+}
+
+const min_sample_distance = 50; //minimum distance for sample to be taken in canvas pixels.
+const max_join_distance = 10; //maximum distance from an endpoint for a cross to be a JOIN.
+const min_join_spacing = 30; // minimum space between joins.
+const max_join_area = 15; // maximum difference between bounds allowed for joins.
+var show_points;
+
+
+
+function test() {
+    strokes = [
+        { start: { x: 100, y: 100 }, end: { x: 500, y: 500 }, samples: [{ x: 100, y: 100 }, { x: 500, y: 500 }] },
+        { start: { x: 499, y: 100 }, end: { x: 499, y: 200 }, samples: [{ x: 499, y: 100 }, { x: 499, y: 200 }] },
+        { start: { x: 101, y: 500 }, end: { x: 101, y: 400 }, samples: [{ x: 101, y: 500 }, { x: 101, y: 400 }] },
+
+    ]
+}
+
 var default_option = {
     show_romaji: false,
     show_kana: false,
@@ -9,11 +34,12 @@ var default_option = {
     show_grid: 1,
     box_size: 600,
     pen_size: 2,
-    mode: 1,
+    game_mode: 1,
     // 0 : all randomly
     // 1 : phrase/word exercises
     // 2 : kana practice
-    compound_kana: true
+    compound_kana: true,
+    show_points: true,
 };
 
 const exe_file_name = "./JA_exercises.txt"
@@ -22,7 +48,7 @@ const snapshot_w = 80;
 const snapshot_h = 80;
 const max_snapshot_row = 10;
 const timer_interval = 8;
-var mode;
+var game_mode;
 var use_compound_kana;
 
 var all_kana;
@@ -37,11 +63,287 @@ let showing_answer = 'kana';
 let current_answer_kana = '';
 let current_answer_kanji = '';
 
+let strokes = [];
+let crosses = [];
+let joins = [];
+let current_stroke = null;
+
+
+
+function getCross(q1, q2, p1, p2) {
+    //maths time. y=mc, m=(y2-y1)/(x2-x1) =>
+
+    let mq = (q2.y - q1.y) / (q2.x - q1.x);
+    let mp = (p2.y - p1.y) / (p2.x - p1.x);
+    if (mq === mp) return undefined; //parallel lines -> no solution.
+
+
+    //check Q for straight line (vertical)
+    if (q1.x === q2.x) {
+        if (p1.x === p2.x) {
+            //P is vertical. no solutions exist.
+            return undefined;
+        }
+        else if (p1.y === p2.y) {
+            //P is horizontal. crossing point is (Qx,Py)
+            return { x: q1.x, y: p1.y }
+        }
+        else {
+            //P is a normal line. use gradient.
+            return { x: q1.x, y: Math.round(mp * q1.x + p1.y - mp * p1.x) }
+        }
+    }
+    //check Q for straight line (horizontal)
+    else if (q1.y === q2.y) {
+        if (p1.y === p2.y) {
+            //P is horizontal. no solutions exist.
+            return undefined;
+        }
+        else if (p1.x === p2.x) {
+            //P is vertical. crossing point is (Px,Qy)
+            return { x: p1.x, y: q1.y }
+        }
+        else {
+            //P is a normal line. use gradient. (reversed)
+            //y=mx+c ... x=(y-c)/m
+            return { x: Math.round((q1.y - p1.y + mp * p1.x) / mp), y: q1.y }
+        }
+    }
+    //check P for straight line (vertical)
+    else if (p1.x === p2.x) {
+
+        //Q is normal. use gradient.
+        return { x: p1.x, y: Math.round(mq * p1.x + q1.y - mq * q1.x) }
+    }
+    //check P for straight line (horizontal)
+    else if (p1.y === p2.y) {
+        //Q is normal. use gradient. (reversed)
+        //y=mx+c ... x=(y-c)/m
+        return { x: Math.round((p1.y - q1.y + mq * q1.x) / mq), y: p1.y }
+    }
+    else {
+        //both lines are NORMAL.
+        //(this doesnt work for perfectly straight lines. x=c / y=c.)
+        //returns the cross point of the two line segments p and q, defined by four points, two per line.
+        let x = -(q1.y - mq * q1.x - p1.y + mp * p1.x) / (mq - mp);
+        let y = mq * x + q1.y - mq * q1.x;
+        return {
+            x: Math.round(x), y: Math.round(y)
+        };
+    }
+}
+
+function dist(p, q) {
+    console.log(p, q, "dist", Math.sqrt(Math.pow(q.x - p.x, 2) + Math.pow(q.y - p.y, 2)));
+    if (q == false) return 99;
+    return Math.sqrt(Math.pow(q.x - p.x, 2) + Math.pow(q.y - p.y, 2));
+}
+function findCrosses(strokes) {
+    function eq(p, q) {
+        return (p.x === q.x && p.y === q.y)
+    }
+
+    function addJoin(join) {
+        for (let j in joins) {
+            if (dist(join, joins[j]) < min_join_spacing) return;
+        }
+        joins.push(join);
+    }
+
+
+    console.log("finding crosses...");
+    let startTime = new Date().getTime();
+    crosses = [];
+    joins = [];
+    //returns an array containing the cross points of the diagram.
+    for (let s in strokes) {
+        let stroke = strokes[s];
+        for (let p = 1; p < stroke.samples.length; p++) {
+            let p1 = stroke.samples[p - 1];
+            let p2 = stroke.samples[p];
+            for (let s2 in strokes) {
+                let stroke2 = strokes[s2];
+                sample_pair: for (let q = 1; q < stroke2.samples.length; q++) {
+                    let q1 = stroke2.samples[q - 1];
+                    let q2 = stroke2.samples[q];
+                    if (q1.x == p1.x && q2.x == p2.x && q1.y == p1.y && q2.y == p2.y) {
+                        //ignore
+                        break sample_pair;
+                    }
+                    else if (s === s2) {
+                        //ignore adjacent pairs from same stroke.
+                        if (eq(p1, q1) || eq(p1, q2) || eq(p2, q1) || eq(p2, q2)) break sample_pair;
+                    }
+
+
+                    //calculate bounds
+                    let qminx = 99999;
+                    let qmaxx = -99999;
+                    let qminy = 99999;
+                    let qmaxy = -99999;
+                    for (let i of [q1, q2]) {
+                        if (i.x < qminx) qminx = i.x;
+                        if (i.y < qminy) qminy = i.y;
+                        if (i.x > qmaxx) qmaxx = i.x;
+                        if (i.y > qmaxy) qmaxy = i.y;
+                    }
+                    let pminx = 99999;
+                    let pmaxx = -99999;
+                    let pminy = 99999;
+                    let pmaxy = -99999;
+                    for (let i of [p1, p2]) {
+                        if (i.x < pminx) pminx = i.x;
+                        if (i.y < pminy) pminy = i.y;
+                        if (i.x > pmaxx) pmaxx = i.x;
+                        if (i.y > pmaxy) pmaxy = i.y;
+                    }
+
+                    let cross = getCross(q1, q2, p1, p2);
+                    if (!cross) break sample_pair;
+
+                    //check for JOIN.
+                    if (s2 !== s) {
+                        let joined = false;
+                        if (p == 1) {
+                            //JOIN to p1
+                            if (dist(p1, cross) < max_join_distance) {
+                                if (cross.x < qmaxx + max_join_area &&
+                                    cross.y < qmaxy + max_join_area &&
+                                    cross.x > qminx - max_join_area &&
+                                    cross.y > qminy - max_join_area) {
+                                    addJoin(cross);
+                                    joined = true;
+                                }
+                            }
+                        }
+                        else if (p == stroke.samples.length - 1) {
+                            //JOIN to p2
+                            if (dist(p2, cross) < max_join_distance) {
+                                if (cross.x < qmaxx + max_join_area &&
+                                    cross.y < qmaxy + max_join_area &&
+                                    cross.x > qminx - max_join_area &&
+                                    cross.y > qminy - max_join_area) {
+                                    addJoin(cross);
+                                    joined = true;
+                                }
+                            }
+                        }
+
+                        if (q == 1) {
+                            //JOIN to q1
+                            if (dist(q1, cross) < max_join_distance) {
+                                if (cross.x < pmaxx + max_join_area &&
+                                    cross.y < pmaxy + max_join_area &&
+                                    cross.x > pminx - max_join_area &&
+                                    cross.y > pminy - max_join_area) {
+                                    addJoin(cross);
+                                    joined = true;
+                                }
+                            }
+                        }
+                        else if (q == stroke2.samples.length - 1) {
+                            //JOIN to q2
+                            if (dist(q2, cross) < max_join_distance) {
+                                if (cross.x < pmaxx + max_join_area &&
+                                    cross.y < pmaxy + max_join_area &&
+                                    cross.x > pminx - max_join_area &&
+                                    cross.y > pminy - max_join_area) {
+                                    addJoin(cross);
+                                    joined = true;
+                                }
+                            }
+                        }
+                        if (joined) break sample_pair;
+                    }
+
+
+
+                    if (qminx <= cross.x && cross.x <= qmaxx && qminy <= cross.y && cross.y <= qmaxy) {
+                        //bounded by Q
+                        if (pminx <= cross.x && cross.x <= pmaxx && pminy <= cross.y && cross.y <= pmaxy) {
+                            //bounded by P
+                            for (let c of crosses) {
+                                if (c.x === cross.x && c.y === cross.y) break sample_pair;
+                            }
+                            crosses.push(cross);
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+    }
+    let timeTaken = new Date().getTime() - startTime;
+    console.log("took", (timeTaken) + "ms");
+    return { crosses, joins };
+}
+
+
+
+
 $(document).ready(function () {
     let canvas = document.getElementById("draw-canvas");
 
-    let strokes;
+
     let startTime, timer_enabled;
+
+
+
+
+    function drawPoints() {
+
+        for (let s in strokes) {
+
+            for (let p = 1; p < (strokes[s].samples.length); p++) {
+                //draw sample points.
+                $canvas.drawEllipse({
+                    fillStyle: '#0c0',
+                    x: strokes[s].samples[p].x, y: strokes[s].samples[p].y,
+                    width: pen_size * 0.5, height: pen_size * 0.5,
+                    rounded: true,
+                });
+                $canvas.drawLine({
+                    strokeStyle: '#0c0',
+                    strokeWidth: pen_size * 0.2,
+                    rounded: true,
+                    x1: strokes[s].samples[p - 1].x, y1: strokes[s].samples[p - 1].y,
+                    x2: strokes[s].samples[p].x, y2: strokes[s].samples[p].y,
+                });
+            }
+
+            $canvas.drawEllipse({
+                fillStyle: '#c00',
+                x: strokes[s].start.x, y: strokes[s].start.y,
+                width: pen_size * 1.2, height: pen_size * 1.2,
+                rounded: true,
+            });
+            $canvas.drawEllipse({
+                fillStyle: '#00c',
+                x: strokes[s].end.x, y: strokes[s].end.y,
+                width: pen_size * 1.2, height: pen_size * 1.2,
+                rounded: true,
+            });
+
+            for (let cross of crosses) {
+                $canvas.drawEllipse({
+                    fillStyle: '#fa0',
+                    x: cross.x, y: cross.y,
+                    width: pen_size * 0.8, height: pen_size * 0.8,
+                    rounded: true,
+                });
+            }
+            for (let join of joins) {
+                $canvas.drawEllipse({
+                    fillStyle: '#0af',
+                    x: join.x, y: join.y,
+                    width: pen_size * 0.8, height: pen_size * 0.8,
+                    rounded: true,
+                });
+            }
+        }
+    }
 
     function startTimer() {
         startTime = new Date().getTime();
@@ -116,7 +418,8 @@ $(document).ready(function () {
 
         if (e.button == 0) {
             isdrawing = true;
-            strokes++;
+            current_stroke = { start: last_mouse, samples: [last_mouse] };
+            last_sample = last_mouse;
             $(this).drawEllipse({
                 fillStyle: '#000',
                 x: last_mouse.x, y: last_mouse.y,
@@ -135,17 +438,34 @@ $(document).ready(function () {
     });
     $canvas.on("mouseup", function (e) {
         if (e.button == 0) {
-            isdrawing = false;
+            if (isdrawing) {
+                isdrawing = false;
+                current_stroke.end = last_mouse;
+                current_stroke.samples.push(last_mouse);
+                strokes.push(current_stroke);
+                current_stroke = null;
+                last_sample = null;
+                findCrosses(strokes);
+            }
+
         }
     });
     let last_mouse = null;
+    let last_sample = null;
     $canvas.on("mousemove", function (e) {
         let mouse = {
             x: e.offsetX,
             y: e.offsetY
         };
         if (!last_mouse) last_mouse = mouse;
+
+
+
+
+
+
         if (isdrawing) {
+
             $(this).drawLine({
                 strokeStyle: '#000',
                 strokeWidth: pen_size,
@@ -153,10 +473,26 @@ $(document).ready(function () {
                 x1: last_mouse.x, y1: last_mouse.y,
                 x2: mouse.x, y2: mouse.y,
             });
+            //check if sample is needed
+            let distance = Math.sqrt(Math.pow(last_sample.x - mouse.x, 2) + Math.pow(last_sample.y - mouse.y, 2));
+            if (distance > min_sample_distance) {
+                //take sample.
+                current_stroke.samples.push(mouse);
+                last_sample = mouse;
+            }
         }
+        //draw points
+        if (show_points) drawPoints();
         last_mouse = mouse;
     });
     $canvas.on("mouseleave", function () {
+        if (isdrawing) {
+            current_stroke.end = last_mouse;
+            current_stroke.samples.push(last_mouse);
+            last_sample = last_mouse;
+            strokes.push(current_stroke);
+            current_stroke = null;
+        }
         isdrawing = false;
     });
 
@@ -277,13 +613,15 @@ $(document).ready(function () {
     });
     $("#pen_size").on("input", resetPen);
 
-    $("#mode").on("input", function (e) {
-        setMode(parseInt($(this).val()));
+    $("#game_mode").on("input", function (e) {
+        setGameMode(parseInt($(this).val()));
     });
 
 
-    function setMode(new_mode) {
-        mode = new_mode;
+
+
+    function setGameMode(new_mode) {
+        game_mode = new_mode;
         loadExercise();
     }
     function updateOption(option, value) {
@@ -312,6 +650,10 @@ $(document).ready(function () {
 
             case "compound_kana":
                 use_compound_kana = value;
+                break;
+
+            case "show_points":
+                show_points = value;
                 break;
             default: console.log("fail"); return;
         }
@@ -342,11 +684,14 @@ $(document).ready(function () {
         $("#pen_size").val(default_option.pen_size);
         resetCanvas();
 
-        $("#mode").val(default_option.mode);
-        mode = default_option.mode;
+        $("#game_mode").val(default_option.game_mode);
+        game_mode = default_option.game_mode;
 
         if (default_option.compound_kana) $("#compound_kana").addClass("checked");
         updateOption("compound_kana", default_option.compound_kana);
+
+        if (default_option.show_points) $("#show_points").addClass("checked");
+        updateOption("show_points", default_option.show_points);
 
     }
 
@@ -411,8 +756,8 @@ $(document).ready(function () {
         //constructs an html sequence of <span class="answer_kana [correct/incorrect]">
 
         let correct_series = [];
-        if (currentExercise.strokes) {
-            correct_series = [[{ char: currentExercise.kana, strokes: currentExercise.strokes }]];
+        if (currentExercise.stroke_count) {
+            correct_series = [[{ char: currentExercise.kana, stroke_count: currentExercise.stroke_count }]];
         }
         else {
             if (use_compound_kana && currentExercise.compounds) {
@@ -492,7 +837,7 @@ $(document).ready(function () {
 
         //strokes
         let totalStrokes = 0;
-        for (let c in log) totalStrokes += log[c].strokes;
+        for (let c in log) totalStrokes += log[c].strokes.length;
 
         let strokes_correct = 0;
         if (currentExercise.strokes) {
@@ -524,7 +869,8 @@ $(document).ready(function () {
     }
 
     function randomExercise() {
-        switch (mode) {
+        //modify for selective exercises.
+        switch (game_mode) {
             case 0:
                 let r = Math.floor(Math.random() * (exercises.length + all_kana.normal.length));
                 if (r < exercises.length) {
@@ -562,7 +908,10 @@ $(document).ready(function () {
             canvas.width,
             canvas.height,
         );
-        strokes = 0;
+        strokes = [];
+        crosses = [];
+        joins = [];
+
     }
 
     function loadAnswer() {
@@ -610,6 +959,9 @@ var exe_string = `
 
 function loadKana() {
     $.getJSON("./kana.json", function (data) {
+        for (let k in data.normal) {
+            data.normal[k].weight = weightings.normal;
+        }
         all_kana = data;
         console.log("kana retrieved.", all_kana);
     })
@@ -696,7 +1048,7 @@ function parseExercises(callback) {
 
                     //includes strokes.
                     exercises.push(
-                        { type: 'word', english: english, sub, romaji: e[1].trim(), kana: kanji, group: current_group, kanji: null, strokes }
+                        { type: 'word', weight: weightings.normal, english: english, sub, romaji: e[1].trim(), kana: kanji, group: current_group, kanji: null, strokes }
                     );
                 }
                 else {
@@ -718,10 +1070,10 @@ function parseExercises(callback) {
 
 
                     if (e.length == 3) {
-                        exercises.push({ type: 'word', english: english, sub, romaji: e[1].trim(), kana, compounds, group: current_group, kanji: null });
+                        exercises.push({ type: 'word', weight: weightings.normal, english: english, sub, romaji: e[1].trim(), kana, compounds, group: current_group, kanji: null });
                     }
                     else if (e.length == 4) {
-                        exercises.push({ type: 'word', english: english, sub, romaji: e[1].trim(), kana, compounds, group: current_group, kanji: e[3].trim() });
+                        exercises.push({ type: 'word', weight: weightings.normal, english: english, sub, romaji: e[1].trim(), kana, compounds, group: current_group, kanji: e[3].trim() });
                     }
                 }
             }
@@ -746,7 +1098,7 @@ function isCorrect(drawing, goal) {
         strokes += char.strokes;
     }
 
-    if (drawing.strokes == strokes) return true;
+    if (drawing.strokes.length == strokes) return true;
     else return false;
 
 }
