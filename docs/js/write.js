@@ -708,7 +708,7 @@ $(document).ready(function () {
         let canvas = document.getElementById("draw-canvas");
 
         let snapshot = canvas.toDataURL("image/png");
-        log.push({ snapshot, strokes });
+        log.push({ snapshot, strokes, crosses, joins });
         $log.css("opacity", "1")
         $accept.css("opacity", "1").prop("disabled", false)
         $log.append(`<img class="log_img" src="${snapshot}" width="${snapshot_w}" height="${snapshot_h}">`)
@@ -722,7 +722,7 @@ $(document).ready(function () {
         let canvas = document.getElementById("draw-canvas");
         let snapshot = canvas.toDataURL("image/png");
         $log.append(`<img class="log_img" src="${snapshot}" width="${snapshot_w}" height="${snapshot_h}">`)
-        log.push({ snapshot, strokes });
+        log.push({ snapshot, strokes, crosses, joins });
         accept();
     }
 
@@ -835,25 +835,52 @@ $(document).ready(function () {
 
         //strokes
         let totalStrokes = 0;
-        for (let c in log) totalStrokes += log[c].strokes.length;
+        for (let l in log) {
+            totalStrokes += log[l].strokes.length;
+        }
 
         let strokes_correct = 0;
+
+        let score = 0;
+        let max_score = 0;
         if (currentExercise.strokes) {
             strokes_correct = currentExercise.strokes;
         }
         else {
-            for (let k of currentExercise.kana) {
-                let kana_obj = findKanaObject(k);
+            for (let k in currentExercise.kana) {
+                let kana_obj = findKanaObject(currentExercise.kana[k]);
                 strokes_correct += kana_obj.strokes;
+
+                let kana_max_score = kana_obj.strokes.max ? 1 : kana_obj.strokes;
+                kana_max_score += kana_obj.crosses.max ? 1 : (kana_obj.crosses > 0 ? kana_obj.crosses : 1)
+                kana_max_score += kana_obj.joins.max ? 1 : (kana_obj.joins > 0 ? kana_obj.joins : 1);
+                kana_max_score += kana_obj.contacts ? 1 : 0;
+                max_score += kana_max_score;
+                if (log.length > k) {
+                    let char = log[k];
+                    //add strokes.
+                    if (kana_obj.strokes.max) score += (kana_obj.strokes.min <= char.strokes.length && char.strokes.length <= kana_obj.strokes.max) ? 1 : 0;
+                    else score += Math.max(kana_obj.strokes - Math.abs((kana_obj.strokes - char.strokes.length)), 0);
+                    //add crosses.
+                    if (kana_obj.crosses.max) score += (kana_obj.crosses.min <= char.crosses.length && char.crosses.length <= kana_obj.crosses.max) ? 1 : 0;
+                    else score += kana_obj.crosses == 0 ? (char.crosses.length == 0 ? 1 : 0) : Math.max(kana_obj.crosses - Math.abs((kana_obj.crosses - char.crosses.length)), 0);
+                    //add joins.
+                    if (kana_obj.joins.max) score += (kana_obj.joins.min <= char.joins.length && char.joins.length <= kana_obj.joins.max) ? 1 : 0;
+                    else score += kana_obj.joins == 0 ? (char.joins.length == 0 ? 1 : 0) : Math.max(kana_obj.joins - Math.abs((kana_obj.joins - char.joins.length)), 0);
+                    //add contacts
+                    if (kana_obj.contacts) score += (kana_obj.contacts == (char.joins.length + char.crosses.length)) ? 1 : 0;
+                }
+
             }
         }
+
+        console.log("score:", score, max_score);
 
         $("td.stats_strokes").text(totalStrokes + "/" + strokes_correct);
         if (totalStrokes === strokes_correct)
             $(".stats_strokes").removeClass("incorrect").addClass("correct");
         else
             $(".stats_strokes").removeClass("correct").addClass("incorrect");
-
 
 
     }
@@ -1002,7 +1029,10 @@ function findKanaObject(k) {
             letters: 'hiragana',
             char: obj.hiragana.char,
             code: obj.hiragana.code,
-            strokes: obj.hiragana.strokes
+            strokes: obj.hiragana.strokes,
+            crosses: obj.hiragana.crosses,
+            joins: obj.hiragana.joins,
+
         };
     }
     else {
@@ -1012,7 +1042,9 @@ function findKanaObject(k) {
             letters: 'katakana',
             char: obj.katakana.char,
             code: obj.katakana.code,
-            strokes: obj.katakana.strokes
+            strokes: obj.katakana.strokes,
+            crosses: obj.katakana.crosses,
+            joins: obj.katakana.joins,
         };
     }
 }

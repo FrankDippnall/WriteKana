@@ -552,8 +552,15 @@
                 "char": "マ",
                 "code": 12510,
                 "strokes": 2,
-                "crosses": 0,
-                "joins": 1
+                "crosses": {
+                    "min": 0,
+                    "max": 1
+                },
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                },
+                "contacts": 1
             }
         },
         {
@@ -802,7 +809,7 @@
             "katakana": {
                 "char": "ヲ",
                 "code": 12530,
-                "strokes": 2,
+                "strokes": 3,
                 "crosses": 0,
                 "joins": 2
             }
@@ -1178,14 +1185,20 @@
                 "code": 12401,
                 "strokes": 4,
                 "crosses": 2,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             },
             "katakana": {
                 "char": "パ",
                 "code": 12497,
                 "strokes": 3,
                 "crosses": 0,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             }
         },
         {
@@ -1195,14 +1208,20 @@
                 "code": 12404,
                 "strokes": 2,
                 "crosses": 0,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             },
             "katakana": {
                 "char": "ピ",
                 "code": 12500,
                 "strokes": 3,
                 "crosses": 0,
-                "joins": 2
+                "joins": {
+                    "min": 1,
+                    "max": 2
+                }
             }
         },
         {
@@ -1212,14 +1231,20 @@
                 "code": 12407,
                 "strokes": 5,
                 "crosses": 0,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             },
             "katakana": {
                 "char": "プ",
                 "code": 12503,
                 "strokes": 2,
                 "crosses": 0,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             }
         },
         {
@@ -1229,14 +1254,20 @@
                 "code": 12410,
                 "strokes": 2,
                 "crosses": 0,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             },
             "katakana": {
                 "char": "ペ",
                 "code": 12506,
                 "strokes": 2,
                 "crosses": 0,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             }
         },
         {
@@ -1246,14 +1277,20 @@
                 "code": 12413,
                 "strokes": 5,
                 "crosses": 2,
-                "joins": 2
+                "joins": {
+                    "min": 1,
+                    "max": 2
+                }
             },
             "katakana": {
                 "char": "ポ",
                 "code": 12509,
                 "strokes": 5,
                 "crosses": 1,
-                "joins": 1
+                "joins": {
+                    "min": 0,
+                    "max": 1
+                }
             }
         }
     ],
