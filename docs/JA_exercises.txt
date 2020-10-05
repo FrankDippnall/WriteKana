@@ -1,5 +1,4 @@
 
-
 -greetings
 thank you | arigatou | ありがとう
 hello | kon'nichiwa | こんにちは
@@ -45,20 +44,22 @@ Portuguese language|porutogarugo|ポルトガルご|ポルトガル語
 Spanish person|supeinjin|スペインじん|スペイン人
 Spanish language|supeingo|スペインご|スペイン語
 
--numbers
+-numbers 
 0 (zero)|zero/rei|ゼロ|零
-!1 (one)|ichi|一|1
-!2 (two)|ni|ニ|2
-!3 (three)|san|三|3
-!4 (four)|shi/yon|四|5
-!5 (five)|go|互|4
-!6 (six)|roku|六|4
-!7 (seven)|shichi/nana|七|2
-!8 (eight)|hachi|八|2
-!9 (nine)|kyuu/ku|九|2
-!10 (ten)|juu|十|2
-!100 (hundred)|hyaku|百|6
-!1000 (thousand)|sen|千|3
+-kanji type format: "!eng (sub)|romaji|kanji|strokes|crosses?|joins?|contacts?"
+!1 (one)|ichi|一|1|0|0
+!2 (two)|ni|ニ|2|0|0
+!3 (three)|san|三|3|0|0
+!4 (four)|shi/yon|四|5|||3,5
+!5 (five)|go|互|4|||5
+!6 (six)|roku|六|4|0|0,1
+!7 (seven)|shichi/nana|七|2|1|0
+!8 (eight)|hachi|八|2|0|0
+!9 (nine)|kyuu/ku|九|2|1|0
+!10 (ten)|juu|十|2|1|0
+!100 (hundred)|hyaku|百|6|||7
+!1000 (thousand)|sen|千|3|1|1
+
 -family
 child|kodomo|こども|子供
 cousin (female)|itoko|いとこ|従姉妹

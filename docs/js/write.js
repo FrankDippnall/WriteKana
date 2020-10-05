@@ -19,12 +19,32 @@ var show_points;
 
 
 function test() {
-    strokes = [
-        { start: { x: 100, y: 100 }, end: { x: 500, y: 500 }, samples: [{ x: 100, y: 100 }, { x: 500, y: 500 }] },
-        { start: { x: 499, y: 100 }, end: { x: 499, y: 200 }, samples: [{ x: 499, y: 100 }, { x: 499, y: 200 }] },
-        { start: { x: 101, y: 500 }, end: { x: 101, y: 400 }, samples: [{ x: 101, y: 500 }, { x: 101, y: 400 }] },
+    all_kana.normal =
+        [{
+            "romaji": "ta",
+            "hiragana": {
+                "char": "た",
+                "code": 12383,
+                "strokes": 4,
+                "crosses": 1,
+                "joins": 0
+            },
+            "katakana": {
+                "char": "タ",
+                "code": 12479,
+                "strokes": 3,
+                "crosses": {
+                    "min": 0,
+                    "max": 1
+                },
+                "joins": {
+                    "min": 1,
+                    "max": 2
+                },
+                "contacts": 2
+            }
+        }];
 
-    ]
 }
 
 var default_option = {
@@ -42,6 +62,8 @@ var default_option = {
     show_points: true,
 };
 
+
+
 const exe_file_name = "./JA_exercises.txt"
 const pen_base_size = 40;
 const snapshot_w = 80;
@@ -57,6 +79,13 @@ var log = [];
 var currentExercise = null;
 var currentGrid = 0;
 
+const score_modifiers = {
+    strokes: 2,
+    crosses: 0.5,
+    joins: 0.5,
+    contacts: 1,
+    decay_rate: 0.6
+}
 
 
 let showing_answer = 'kana';
@@ -147,6 +176,12 @@ function findCrosses(strokes) {
             if (dist(join, joins[j]) < min_join_spacing) return;
         }
         joins.push(join);
+    }
+    function addCross(cross) {
+        for (let j in joins) {
+            if (dist(cross, joins[j]) < min_join_spacing) return;
+        }
+        crosses.push(cross);
     }
 
 
@@ -263,7 +298,7 @@ function findCrosses(strokes) {
                             for (let c of crosses) {
                                 if (c.x === cross.x && c.y === cross.y) break sample_pair;
                             }
-                            crosses.push(cross);
+                            addCross(cross);
                         }
                     }
 
@@ -743,66 +778,12 @@ $(document).ready(function () {
         }
     }
 
-    function constructResultKanaHTML() {
-        function getFullText(array) {
-            let str = "";
-            for (let o of array) {
-                str += o.char;
-            }
-            return str;
-        }
-        //constructs an html sequence of <span class="answer_kana [correct/incorrect]">
 
-        let correct_series = [];
-        if (currentExercise.stroke_count) {
-            correct_series = [[{ char: currentExercise.kana, stroke_count: currentExercise.stroke_count }]];
-        }
-        else {
-            if (use_compound_kana && currentExercise.compounds) {
-                for (let c of currentExercise.compounds) {
-                    if (c.length == 2) {
-                        correct_series.push([findKanaObject(c[0]), findKanaObject(c[1])]);
-                    }
-
-                    else {
-                        correct_series.push([findKanaObject(c[0])]);
-                    }
-
-                }
-            }
-            else {
-                for (let k in currentExercise.kana) {
-                    correct_series.push([findKanaObject(currentExercise.kana[k])]);
-                }
-            }
-
-        }
-
-        console.log(correct_series)
-
-
-
-        let html = "";
-        for (let k in correct_series) {
-            let kana = log[k];
-            let kana_correct = correct_series[k];
-            console.log(kana, kana_correct)
-            if (kana) {
-                html += `<span class="answer_kana ${isCorrect(kana, kana_correct) ? 'correct' : 'incorrect'}">${getFullText(kana_correct)}</span>`;
-            }
-            else {
-                html += `<span class="answer_kana missing">${getFullText(kana_correct)}</span>`;
-            }
-
-        }
-        return html;
-
-    }
 
     function accept() {
 
+
         //load answer html
-        loadAnswer();
         $finish_log.html($log.html());
         showing_answer = 'kana';
         document.getElementById("finish_answer").innerHTML = current_answer_kana;
@@ -819,68 +800,99 @@ $(document).ready(function () {
         $("#timer").text(parseTime(stopTime - startTime));
         $("td.stats_time").text(parseTimeLong(stopTime - startTime));
 
-
-        let chars = log.length;
-        let chars_correct;
-        if (use_compound_kana && currentExercise.type == "word" && currentExercise.compounds)
-            chars_correct = currentExercise.compounds.length;
-        else
-            chars_correct = currentExercise.kana.length;
-
-        $("td.stats_characters").text(chars + "/" + chars_correct);
-        if (chars == chars_correct)
-            $(".stats_characters").removeClass("incorrect").addClass("correct");
-        else
-            $(".stats_characters").removeClass("correct").addClass("incorrect");
-
-        //strokes
-        let totalStrokes = 0;
-        for (let l in log) {
-            totalStrokes += log[l].strokes.length;
-        }
-
-        let strokes_correct = 0;
-
         let score = 0;
         let max_score = 0;
-        if (currentExercise.strokes) {
-            strokes_correct = currentExercise.strokes;
+
+        let accuracy = [];
+        let correct_series = [];
+
+        function tally(result) {
+            max_score += result.max_score;
+            score += result.score;
+            accuracy.push(result.accuracy);
+        }
+
+
+        if (currentExercise.type === "kanji_single") {
+            let kanji_obj = {
+                romaji: currentExercise.romaji,
+                letters: 'kanji',
+                char: currentExercise.kana,
+                strokes: currentExercise.strokes,
+                crosses: currentExercise.crosses,
+                joins: currentExercise.joins,
+                contacts: currentExercise.contacts
+            };
+            let result = isCharCorrect(log[0], [kanji_obj]);
+            tally(result);
+            correct_series.push([kanji_obj]);
         }
         else {
-            for (let k in currentExercise.kana) {
-                let kana_obj = findKanaObject(currentExercise.kana[k]);
-                strokes_correct += kana_obj.strokes;
-
-                let kana_max_score = kana_obj.strokes.max ? 1 : kana_obj.strokes;
-                kana_max_score += kana_obj.crosses.max ? 1 : (kana_obj.crosses > 0 ? kana_obj.crosses : 1)
-                kana_max_score += kana_obj.joins.max ? 1 : (kana_obj.joins > 0 ? kana_obj.joins : 1);
-                kana_max_score += kana_obj.contacts ? 1 : 0;
-                max_score += kana_max_score;
-                if (log.length > k) {
-                    let char = log[k];
-                    //add strokes.
-                    if (kana_obj.strokes.max) score += (kana_obj.strokes.min <= char.strokes.length && char.strokes.length <= kana_obj.strokes.max) ? 1 : 0;
-                    else score += Math.max(kana_obj.strokes - Math.abs((kana_obj.strokes - char.strokes.length)), 0);
-                    //add crosses.
-                    if (kana_obj.crosses.max) score += (kana_obj.crosses.min <= char.crosses.length && char.crosses.length <= kana_obj.crosses.max) ? 1 : 0;
-                    else score += kana_obj.crosses == 0 ? (char.crosses.length == 0 ? 1 : 0) : Math.max(kana_obj.crosses - Math.abs((kana_obj.crosses - char.crosses.length)), 0);
-                    //add joins.
-                    if (kana_obj.joins.max) score += (kana_obj.joins.min <= char.joins.length && char.joins.length <= kana_obj.joins.max) ? 1 : 0;
-                    else score += kana_obj.joins == 0 ? (char.joins.length == 0 ? 1 : 0) : Math.max(kana_obj.joins - Math.abs((kana_obj.joins - char.joins.length)), 0);
-                    //add contacts
-                    if (kana_obj.contacts) score += (kana_obj.contacts == (char.joins.length + char.crosses.length)) ? 1 : 0;
+            if (use_compound_kana && currentExercise.compounds) {
+                for (let k in currentExercise.compounds) {
+                    let kana_obj0 = findKanaObject(currentExercise.compounds[k][0]);
+                    let result;
+                    if (currentExercise.compounds.length == 1) {
+                        result = isCharCorrect(log[k], [kana_obj0]);
+                    }
+                    else {
+                        let kana_obj1 = findKanaObject(currentExercise.compounds[k][1]);
+                        result = isCharCorrect(log[k], [kana_obj0, kana_obj1]);
+                    }
+                    tally(result)
+                    correct_series.push([kana_obj0, kana_obj1]);
                 }
-
+            }
+            else {
+                for (let k in currentExercise.kana) {
+                    let kana_obj = findKanaObject(currentExercise.kana[k]);
+                    let result = isCharCorrect(log[k], [kana_obj]);
+                    tally(result)
+                    correct_series.push([kana_obj]);
+                }
             }
         }
 
-        console.log("score:", score, max_score);
 
-        $("td.stats_strokes").text(totalStrokes + "/" + strokes_correct);
-        if (totalStrokes === strokes_correct)
-            $(".stats_strokes").removeClass("incorrect").addClass("correct");
-        else
-            $(".stats_strokes").removeClass("correct").addClass("incorrect");
+        //decay score
+        let true_score = getTrueScore(score, max_score);
+
+        console.log("score:", score, max_score, true_score);
+        $("td.stats_accuracy").text(Math.round(100 * true_score / max_score) + "%");
+        /*
+                if (chars == chars_correct)
+                    $(".stats_characters").removeClass("incorrect").addClass("correct");
+                else
+                    $(".stats_characters").removeClass("correct").addClass("incorrect");
+                if (totalStrokes === strokes_correct)
+                    $(".stats_strokes").removeClass("incorrect").addClass("correct");
+                else
+                    $(".stats_strokes").removeClass("correct").addClass("incorrect");
+        */
+
+
+        current_answer_kanji = "<span class='kanji'>" + currentExercise.kanji + "</span>";
+        function getFullText(array) {
+            let str = "";
+            for (let o of array) {
+                str += o.char;
+            }
+            return str;
+        }
+
+        let html = "";
+        for (let k in correct_series) {
+            let kana = log[k];
+            let kana_correct = correct_series[k];
+            if (kana) {
+                html += `<span class="answer_kana ${(accuracy[k] > 80) ? 'correct' : 'incorrect'}">${getFullText(kana_correct)}</span>`;
+            }
+            else {
+                html += `<span class="answer_kana missing">${getFullText(kana_correct)}</span>`;
+            }
+        }
+        $("#finish_answer").html(html);
+
 
 
     }
@@ -939,9 +951,8 @@ $(document).ready(function () {
 
     }
 
-    function loadAnswer() {
-        current_answer_kanji = "<span class='kanji'>" + currentExercise.kanji + "</span>";
-        current_answer_kana = constructResultKanaHTML();
+    function loadAnswer(accuracy) {
+
     }
 
     function loadExercise() {
@@ -1032,7 +1043,7 @@ function findKanaObject(k) {
             strokes: obj.hiragana.strokes,
             crosses: obj.hiragana.crosses,
             joins: obj.hiragana.joins,
-
+            contacts: obj.hiragana.contacts
         };
     }
     else {
@@ -1045,11 +1056,20 @@ function findKanaObject(k) {
             strokes: obj.katakana.strokes,
             crosses: obj.katakana.crosses,
             joins: obj.katakana.joins,
+            contacts: obj.katakana.contacts
         };
     }
 }
 
 function parseExercises(callback) {
+    function parseRange(string) {
+        let array = string.split(",");
+        if (array.length == 1) return array[0].length == 0 ? null : parseInt(array[0]);
+        if (array.length == 2) return { min: parseInt(array[0]), max: parseInt(array[0]) };
+        console.error("range mismatch in file");
+        return null;
+    }
+
     let array = exe_string.split('\n');
     let current_group = null;
     for (let a in array) {
@@ -1072,13 +1092,16 @@ function parseExercises(callback) {
                 }
 
                 if (kanji_single) {
-                    let strokes = parseInt(e[3]);
+                    let strokes = parseRange(e[3]);
+                    let crosses = e.length >= 5 ? parseRange(e[4]) : null;
+                    let joins = e.length >= 6 ? parseRange(e[5]) : null;
+                    let contacts = e.length >= 7 ? parseRange(e[6]) : null;
                     let kanji = e[2].trim();
                     english = english.substr(1)
 
                     //includes strokes.
                     exercises.push(
-                        { type: 'word', weight: weightings.normal, english: english, sub, romaji: e[1].trim(), kana: kanji, group: current_group, kanji: null, strokes }
+                        { type: 'kanji_single', weight: weightings.normal, english: english, sub, romaji: e[1].trim(), kana: kanji, group: current_group, kanji: null, strokes, crosses, joins, contacts }
                     );
                 }
                 else {
@@ -1118,19 +1141,145 @@ function parseExercises(callback) {
 
 
 
+function test1() {
+    let fakeA = {
+        snapshot: "lolno",
+        crosses: [1, 2, 3, 4],
+        joins: [],
+        strokes: [1, 2, 3]
+    }
+    let realA = findKanaObject("あ")
 
-function isCorrect(drawing, goal) {
-    console.log("checking", drawing, goal)
+    return isCharCorrect(fakeA, [realA])
+
+}
 
 
-    let strokes = 0;
-    for (let char of goal) {
-        strokes += char.strokes;
+function isCharCorrect(drawing, goal) {
+
+    function getScore(value, constraint) {
+        if (constraint) {
+            if (constraint.max) {
+                if (value <= constraint.max && value >= constraint.min)
+                    return constraint.min;
+                else if (Math.abs(value - constraint.min) < Math.abs(value - constraint.max))
+                    return Math.max(0, constraint.min - Math.abs(value - constraint.min)); //closer to min
+                else
+                    return Math.max(0, constraint.min - Math.abs(value - constraint.max)); //closer to max 
+            }
+            else if (constraint.max == 0) {
+                return (value == 0 ? 1 : 0);
+            }
+            else return Math.max(0, constraint - Math.abs((constraint - value)));
+        }
+        else if (constraint == 0) {
+            return (value == 0 ? 1 : 0);
+        }
+        else return 0;
     }
 
-    if (drawing.strokes.length == strokes) return true;
-    else return false;
+    function getMaxScore(constraint) {
+        if (constraint) {
+            if (constraint.max) return constraint.min;
+            else if (constraint.max == 0) return 1;
+            else return constraint;
+        }
+        else if (constraint == 0) return 1;
+        else return 0;
+    }
+    function getConstraint(input) {
+        if (input) {
+            if (input.max) return {
+                min: input.min,
+                max: input.max
+            }
+            else return {
+                min: input,
+                max: input
+            }
+        }
+        else if (input == 0) return { min: 0, max: 0 }
+        else return null;
+    }
 
+    let char;
+    if (goal.length > 1) {
+        //aggregate group into single character.
+        char = {
+            strokes: { min: 0, max: 0 },
+            crosses: { min: 0, max: 0 },
+            joins: { min: 0, max: 0 },
+            contacts: { min: 0, max: 0 },
+        }
+        for (let c of goal) {
+            char.strokes.min += c.strokes.max ? c.strokes.min : c.strokes;
+            char.strokes.max += c.strokes.max ? c.strokes.max : c.strokes;
+            if (char.crosses) {
+                char.crosses.min += c.crosses.max ? c.crosses.min : c.crosses;
+                char.crosses.max += c.crosses.max ? c.crosses.max : c.crosses;
+            }
+            else {
+                if (c.contacts) {
+                    char.crosses.max += c.contacts.max ? c.contacts.max : c.contacts;
+                }
+                else console.error("invalid structure: contacts missing");
+            }
+            if (char.joins) {
+                char.joins.min += c.joins.max ? c.joins.min : c.joins;
+                char.joins.max += c.joins.max ? c.joins.max : c.joins;
+            }
+            else {
+                if (c.contacts) {
+                    char.crosses.max += c.contacts.max ? c.contacts.max : c.contacts;
+                }
+                else console.error("invalid structure: contacts missing");
+            }
+            if (c.contacts) {
+                char.contacts.min += c.contacts.max ? c.contacts.min : c.contacts;
+                char.contacts.max += c.contacts.max ? c.contacts.max : c.contacts;
+            }
+            else if (c.contacts == 0) { }
+            else {
+                if (crosses && joins) {
+                    char.contacts.min += (c.crosses.max ? c.crosses.min : c.crosses) + (c.joins.max ? c.joins.min : c.joins);
+                    char.contacts.max += (c.crosses.max ? c.crosses.max : c.crosses) + (c.joins.max ? c.joins.max : c.joins);
+                }
+                else console.error("invalid structure: contacts or joins missing");
+            }
+        }
+    }
+    else {
+        let c = goal[0];
+        char = {
+            strokes: getConstraint(c.strokes),
+            crosses: getConstraint(c.crosses),
+            joins: getConstraint(c.joins),
+            contacts: getConstraint(c.contacts),
+        };
+    }
+
+    let max_score = 0;
+    max_score += getMaxScore(char.strokes) * score_modifiers.strokes
+    max_score += getMaxScore(char.crosses) * score_modifiers.crosses
+    max_score += getMaxScore(char.joins) * score_modifiers.joins
+    max_score += getMaxScore(char.contacts) * score_modifiers.contacts
+
+    let score = 0;
+
+    if (drawing) {
+        //add strokes.
+        score += getScore(drawing.strokes.length, char.strokes) * score_modifiers.strokes;
+        //add crosses.
+        score += getScore(drawing.crosses.length, char.crosses) * score_modifiers.crosses;
+        //add joins.
+        score += getScore(drawing.joins.length, char.joins) * score_modifiers.joins;
+        //add contacts
+        score += getScore(drawing.crosses.length + drawing.joins.length, char.contacts) * score_modifiers.contacts;
+    }
+    console.log("score for ", drawing, goal, ":", score + "/" + max_score)
+    return {
+        max_score, score, accuracy: Math.round(100 * getTrueScore(score, max_score) / max_score)
+    }
 }
 
 
@@ -1182,6 +1331,12 @@ function parseTimeLong(t) {
 
 
 }
+function getTrueScore(score, max_score) {
+    //applies a decay function to the score.
+    return (Math.round((max_score * Math.pow(1 - score_modifiers.decay_rate, max_score - score)) * 100) / 100);
+}
+
+
 
 window.onbeforeunload = function () {
     //return false;
