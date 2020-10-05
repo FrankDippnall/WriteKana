@@ -11,7 +11,7 @@ const weightings = { //used for corrective selection.
 }
 
 const min_sample_distance = 40; //minimum distance for sample to be taken in canvas pixels.
-const max_join_distance = 10; //maximum distance from an endpoint for a cross to be a JOIN.
+const max_join_distance = 15; //maximum distance from an endpoint for a cross to be a JOIN.
 const min_join_spacing = 30; // minimum space between joins.
 const max_join_area = 15; // maximum difference between bounds allowed for joins.
 var show_points;
@@ -21,29 +21,25 @@ var show_points;
 function test() {
     all_kana.normal =
         [{
-            "romaji": "ta",
+            "romaji": "bu",
             "hiragana": {
-                "char": "た",
-                "code": 12383,
-                "strokes": 4,
-                "crosses": 1,
+                "char": "ぶ",
+                "code": 12406,
+                "strokes": {
+                    "min": 5,
+                    "max": 6
+                },
+                "crosses": 0,
                 "joins": 0
             },
             "katakana": {
-                "char": "タ",
-                "code": 12479,
+                "char": "ブ",
+                "code": 12502,
                 "strokes": 3,
-                "crosses": {
-                    "min": 0,
-                    "max": 1
-                },
-                "joins": {
-                    "min": 1,
-                    "max": 2
-                },
-                "contacts": 2
+                "crosses": 0,
+                "joins": 0
             }
-        }];
+        },];
 
 }
 
@@ -81,10 +77,10 @@ var currentGrid = 0;
 
 const score_modifiers = {
     strokes: 2,
-    crosses: 0.5,
+    crosses: 1,
     joins: 0.5,
     contacts: 1,
-    decay_rate: 0.6
+    decay_rate: 0.5
 }
 
 
@@ -178,14 +174,8 @@ function findCrosses(strokes) {
         joins.push(join);
     }
     function addCross(cross) {
-        for (let j in joins) {
-            if (dist(cross, joins[j]) < min_join_spacing) return;
-        }
         crosses.push(cross);
     }
-
-
-    console.log("finding crosses...");
     let startTime = new Date().getTime();
     crosses = [];
     joins = [];
@@ -309,7 +299,7 @@ function findCrosses(strokes) {
 
     }
     let timeTaken = new Date().getTime() - startTime;
-    console.log("took", (timeTaken) + "ms");
+    if (timeTaken > 10) console.warn("crosses took", (timeTaken) + "ms");
     return { crosses, joins };
 }
 
@@ -783,17 +773,6 @@ $(document).ready(function () {
     function accept() {
 
 
-        //load answer html
-        $finish_log.html($log.html());
-        showing_answer = 'kana';
-        document.getElementById("finish_answer").innerHTML = current_answer_kana;
-        document.getElementById("finish_answer_romaji").innerHTML = currentExercise.romaji;
-
-        $finish.css("left", (($("body").width() - $finish.width()) / 2) + "px")
-        $finish.show();
-        $finish_shadow.show();
-
-
         let stopTime = new Date().getTime();
         timer_enabled = false;
 
@@ -801,6 +780,7 @@ $(document).ready(function () {
         $("td.stats_time").text(parseTimeLong(stopTime - startTime));
 
         let score = 0;
+        let true_score = 0;
         let max_score = 0;
 
         let accuracy = [];
@@ -809,6 +789,7 @@ $(document).ready(function () {
         function tally(result) {
             max_score += result.max_score;
             score += result.score;
+            true_score += getTrueScore(result.score, result.max_score);
             accuracy.push(result.accuracy);
         }
 
@@ -832,15 +813,16 @@ $(document).ready(function () {
                 for (let k in currentExercise.compounds) {
                     let kana_obj0 = findKanaObject(currentExercise.compounds[k][0]);
                     let result;
-                    if (currentExercise.compounds.length == 1) {
+                    if (currentExercise.compounds[k].length == 1) {
                         result = isCharCorrect(log[k], [kana_obj0]);
+                        correct_series.push([kana_obj0]);
                     }
                     else {
                         let kana_obj1 = findKanaObject(currentExercise.compounds[k][1]);
                         result = isCharCorrect(log[k], [kana_obj0, kana_obj1]);
+                        correct_series.push([kana_obj0, kana_obj1]);
                     }
                     tally(result)
-                    correct_series.push([kana_obj0, kana_obj1]);
                 }
             }
             else {
@@ -852,11 +834,6 @@ $(document).ready(function () {
                 }
             }
         }
-
-
-        //decay score
-        let true_score = getTrueScore(score, max_score);
-
         console.log("score:", score, max_score, true_score);
         $("td.stats_accuracy").text(Math.round(100 * true_score / max_score) + "%");
         /*
@@ -891,8 +868,18 @@ $(document).ready(function () {
                 html += `<span class="answer_kana missing">${getFullText(kana_correct)}</span>`;
             }
         }
-        $("#finish_answer").html(html);
 
+        current_answer_kana = html;
+
+        //load answer html
+        $finish_log.html($log.html());
+        showing_answer = 'kana';
+        document.getElementById("finish_answer").innerHTML = current_answer_kana;
+        document.getElementById("finish_answer_romaji").innerHTML = currentExercise.romaji;
+
+        $finish.css("left", (($("body").width() - $finish.width()) / 2) + "px")
+        $finish.show();
+        $finish_shadow.show();
 
 
     }
@@ -1276,7 +1263,6 @@ function isCharCorrect(drawing, goal) {
         //add contacts
         score += getScore(drawing.crosses.length + drawing.joins.length, char.contacts) * score_modifiers.contacts;
     }
-    console.log("score for ", drawing, goal, ":", score + "/" + max_score)
     return {
         max_score, score, accuracy: Math.round(100 * getTrueScore(score, max_score) / max_score)
     }

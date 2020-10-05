@@ -820,7 +820,10 @@
                 "char": "ん",
                 "code": 12435,
                 "strokes": 1,
-                "crosses": 0,
+                "crosses": {
+                    "min": 0,
+                    "max": 1
+                },
                 "joins": 0
             },
             "katakana": {
@@ -990,7 +993,10 @@
                 "char": "ぞ",
                 "code": 12382,
                 "strokes": 3,
-                "crosses": 0,
+                "crosses": {
+                    "min": 0,
+                    "max": 1
+                },
                 "joins": 0
             },
             "katakana": {
@@ -1132,7 +1138,10 @@
             "hiragana": {
                 "char": "ぶ",
                 "code": 12406,
-                "strokes": 6,
+                "strokes": {
+                    "min": 5,
+                    "max": 6
+                },
                 "crosses": 0,
                 "joins": 0
             },
