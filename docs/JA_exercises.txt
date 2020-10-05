@@ -1,4 +1,3 @@
-
 -greetings
 thank you | arigatou | ありがとう
 hello | kon'nichiwa | こんにちは
@@ -51,7 +50,7 @@ Spanish language|supeingo|スペインご|スペイン語
 !2 (two)|ni|ニ|2|0|0
 !3 (three)|san|三|3|0|0
 !4 (four)|shi/yon|四|5|||3,5
-!5 (five)|go|互|4|||5
+!5 (five)|go|互|4|||4
 !6 (six)|roku|六|4|0|0,1
 !7 (seven)|shichi/nana|七|2|1|0
 !8 (eight)|hachi|八|2|0|0
@@ -88,5 +87,41 @@ college student|daigakusei|だいがくせい|大学生
 high school student|koukousei|こうこうせい|高校生
 middle school student|chuugokusei|ちゅうごくせい|中国製
 schoolchild|shougakusei|しょうがくせい|小学生
+
+-places
+bank|ginkou|ぎんこう|銀行
+beauty salon|biyouin|びよういん|美容院
+bookstore|honya|ほにゃ|本屋
+butcher shop|nikuya|にくや|肉屋
+department store|depaato|デパアト
+fish shop|sakanaya|さかなや|魚屋
+high school|koukou|こうこう|高校
+hospital|byouin|びょいうん|病院
+junior high school|chuugakkou|ちゅうがっこう|中学校
+kindergarten|youchien|ようちえん|幼稚園
+library|toshokan|としょかん|図書館
+nursery school|hoikuen|ほいくえん|保育園
+post office|yuubinkyoku|ゆうびんきょく|郵便局
+primary school|shougakkou|しょうがっこう|小学校
+supermarket|suupaamaaketto|スウパアマアケット
+university|daigaku|だいがく|大学
+vegetable store|yaoya|やおや|八百屋
+
+-going out
+then|sorekara|それから
+first of|hajime ni|はじめに|初めてに
+on the way back|kaeri ni|かえりに|帰りに
+I'll go and come back|ittekimasu|いってきます
+have a nice day/see you later (literally "go and be back")|itterasshai|いってらっしゃい
+take care/be careful|ki o tsukete|きをつけて|気をつけて
+I'm back/home|tadaima|ただいま
+welcome back/home|okaerinasai|おかえりなさい|お帰りなさい
+
+-verbs
+to buy (godan verb)|kau|かう|買う
+to go (godan verb)|iku|いく|行く
+to pass (godan verb)|yoru|よる|寄る
+to sell (godan verb)|uru|うる|売る
+
 
 

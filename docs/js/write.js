@@ -18,28 +18,15 @@ var show_points;
 
 
 
+function p(x, y) {
+    return { x, y };
+}
+
 function test() {
-    all_kana.normal =
-        [{
-            "romaji": "bu",
-            "hiragana": {
-                "char": "ぶ",
-                "code": 12406,
-                "strokes": {
-                    "min": 5,
-                    "max": 6
-                },
-                "crosses": 0,
-                "joins": 0
-            },
-            "katakana": {
-                "char": "ブ",
-                "code": 12502,
-                "strokes": 3,
-                "crosses": 0,
-                "joins": 0
-            }
-        },];
+    strokes = [
+        { start: p(100, 300), end: p(500, 300), samples: [p(100, 300), p(500, 300)] },
+        { start: p(300, 100), end: p(300, 500), samples: [p(300, 100), p(300, 500)] },
+    ]
 
 }
 
@@ -892,24 +879,7 @@ $(document).ready(function () {
 
     }
 
-    function randomExercise() {
-        //modify for selective exercises.
-        switch (game_mode) {
-            case 0:
-                let r = Math.floor(Math.random() * (exercises.length + all_kana.normal.length));
-                if (r < exercises.length) {
-                    return exercises[r];
-                } else {
-                    return getKanaPractice(r - exercises.length);
-                }
 
-            case 1: return exercises[Math.floor(Math.random() * exercises.length)];
-            case 2:
-                return getKanaPractice(Math.floor(Math.random() * all_kana.normal.length));
-            default: break;
-        }
-
-    }
 
     function resetHintPos() {
 
@@ -1049,10 +1019,11 @@ function findKanaObject(k) {
 }
 
 function parseExercises(callback) {
+    exercises = [];
     function parseRange(string) {
         let array = string.split(",");
         if (array.length == 1) return array[0].length == 0 ? null : parseInt(array[0]);
-        if (array.length == 2) return { min: parseInt(array[0]), max: parseInt(array[0]) };
+        if (array.length == 2) return { min: parseInt(array[0]), max: parseInt(array[1]) };
         console.error("range mismatch in file");
         return null;
     }
@@ -1326,4 +1297,24 @@ function getTrueScore(score, max_score) {
 
 window.onbeforeunload = function () {
     //return false;
+}
+
+
+function randomExercise() {
+    //modify for selective exercises.
+    switch (game_mode) {
+        case 0:
+            let r = Math.floor(Math.random() * (exercises.length + all_kana.normal.length));
+            if (r < exercises.length) {
+                return exercises[r];
+            } else {
+                return getKanaPractice(r - exercises.length);
+            }
+
+        case 1: return exercises[Math.floor(Math.random() * exercises.length)];
+        case 2:
+            return getKanaPractice(Math.floor(Math.random() * all_kana.normal.length));
+        default: break;
+    }
+
 }
